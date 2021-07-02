@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>狗子云笔记-登陆</title>
+    <link rel = "stylesheet" type = "text/css" href = "css/login.css">
+</head>
+<body>
+
+<div class="loginbg" ></div>
+
+<p class="login_title">狗子云笔记</p>
+
+<div :class="loginstyle" @click="makeme" id="login">
+
+    <form  method="post">
+        <div class="login2"><h4>登&nbsp;陆</h4></div>
+        <div class="login3"><p>{{info}}</p></div>
+        <div class="login3">账&nbsp;号：<input type="text"  class="text" v-model="userID"></div>
+        <div class="login3">密&nbsp;码：<input type="password" class="text" v-model="password"></div>
+        <div class="login3">
+            &nbsp;&nbsp;&nbsp;
+            <input type="button"  value="登 陆" class="but" @click="submit">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="button" value="注 册"  onclick="location='register.jsp'" class="but" >
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+// 登陆透明
+// 发送登陆请求
+	var app = new Vue({
+		el:"#login",
+		data:{
+			loginstyle:"login1",
+			userID:"ddd",
+			password:"111",
+			info:""
+		},
+		methods:{
+		// 透明前端变换
+			makeme:function(){
+				this.loginstyle = "login1chang";
+			},
+			// 提交表单
+			submit:function(){
+				var that = this;
+				axios({
+				   method: 'post',
+				   url: 'http://localhost:2635/checkUser',
+				   data: {
+				      userID: this.userID,
+				      password: this.password
+				   },
+				   // 改变数据成form springboot能接受的形式
+				   transformRequest: [
+				      function (data) {
+				         let ret = ''
+				         for (let it in data) {
+				            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+				         }
+				         ret = ret.substring(0, ret.lastIndexOf('&'));
+				         return ret
+				      }
+				    ],
+					// 改变数据成springboot能接受的form形式
+				    headers: {
+				       'Content-Type': 'application/x-www-form-urlencoded'
+				    }
+				})
+				.then(function(response){
+					that.info = response.data.msg;
+					window.location.href='showHome';
+				},function(err){
+					that.info = "账号或密码错误";
+					console.log(err);
+				})
+			}
+		}
+	})
+	
+</script>
+
+
+</body>
+</html>
