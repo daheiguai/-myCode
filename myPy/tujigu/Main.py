@@ -1,4 +1,5 @@
 import os
+import random
 import threading
 from Spider import Spider
 
@@ -7,7 +8,7 @@ class Main:
     def __init__(self):
         self.spider = Spider()
         # 储存路径，存在哪里自己改
-        self.path = "G:\\图集\\python\\tujigu"
+        self.path = "G:\\图集\\python"
 
 
     def downlod(self):
@@ -61,7 +62,13 @@ class Main:
                     self.spiders(str(i))
 
             elif (chose == '3'):
-                print("暂未开放")
+                nums = input("随机几个本子？\n")
+                if(not nums.isdigit()):
+                    print("mmp?")
+                    continue
+                for i in range(int(nums)):
+                    page = random.randint(1,44979)
+                    self.spiders(str(page))
             else:
                 print("mmp?")
 
